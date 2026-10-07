@@ -1,0 +1,6 @@
+{
+  "name": "ระบบบริหารคลังยา รพ.สต.บ้านห้วยแอ่ง (ชายสดV1)",
+  "description": "ระบบบริหารจัดการคลังยา รพ.สต.บ้านห้วยแอ่ง (ชายสดV1) คลังยาใน คลังยานอก รายงาน บัญชีรับ-จ่ายยา พร้อมระบบล็อกอินตู้เซฟ 3 มิติ และ Firebase Firestore",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

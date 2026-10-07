@@ -1,0 +1,143 @@
+{
+  "entities": {
+    "DrugItem": {
+      "title": "DrugItem",
+      "description": "Standard drug stock item in the inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the drug item" },
+        "drugNumber": { "type": "number", "description": "Sequential catalog number 1-126" },
+        "name": { "type": "string", "description": "Generic and trade name of medicine", "maxLength": 200 },
+        "unit": { "type": "string", "description": "Unit of measurement e.g. tab, bott, amp, vial", "maxLength": 50 },
+        "costPrice": { "type": "number", "description": "Unit cost price in Thai Baht" },
+        "openingBalance": { "type": "number", "description": "Initial stock carried over" },
+        "currentStock": { "type": "number", "description": "Current quantity in internal stock" },
+        "category": { "type": "string", "description": "Medicine category", "maxLength": 100 },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["drugNumber", "name", "unit", "costPrice"]
+    },
+    "InternalLedger": {
+      "title": "InternalLedger",
+      "description": "Monthly drug ledger transactions and records for internal pharmacy",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Month-year key e.g. 2570_0" },
+        "fiscalYear": { "type": "number", "description": "Thai Buddhist fiscal year e.g. 2570" },
+        "monthIndex": { "type": "number", "description": "Month index 0-11 (0 = Oct)" },
+        "recorderName": { "type": "string", "description": "Staff member recording the entries", "maxLength": 100 },
+        "recordDate": { "type": "string", "description": "Date of record", "maxLength": 50 },
+        "rowsPerDrug": { "type": "number", "description": "Lines per drug 1-4" },
+        "entries": { "type": "string", "description": "JSON stringified entries data for performance and cell mapping" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["fiscalYear", "monthIndex"]
+    },
+    "ExternalDrug": {
+      "title": "ExternalDrug",
+      "description": "Drugs requisitioned and held in the external pharmacy (คลังยานอก)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique record id" },
+        "drugId": { "type": "string", "description": "Reference drug number or id", "maxLength": 100 },
+        "name": { "type": "string", "description": "Drug name", "maxLength": 200 },
+        "unit": { "type": "string", "description": "Unit of measure", "maxLength": 50 },
+        "costPrice": { "type": "number", "description": "Unit price" },
+        "quantity": { "type": "number", "description": "Current quantity in external pharmacy" },
+        "lotNumber": { "type": "string", "description": "Lot/Batch number", "maxLength": 100 },
+        "expiryDate": { "type": "string", "description": "Expiry date string YYYY-MM-DD or DD/MM/YYYY", "maxLength": 50 },
+        "dispensedDate": { "type": "string", "description": "Date transferred from internal pharmacy", "maxLength": 50 },
+        "expiryStatus": { "type": "string", "description": "normal, warning, or expired", "maxLength": 50 },
+        "inspector1Name": { "type": "string", "description": "First inspector full name", "maxLength": 100 },
+        "inspector1Position": { "type": "string", "description": "First inspector position", "maxLength": 100 },
+        "inspector1Signature": { "type": "string", "description": "First inspector signature data URI" },
+        "inspector2Name": { "type": "string", "description": "Second inspector full name", "maxLength": 100 },
+        "inspector2Position": { "type": "string", "description": "Second inspector position", "maxLength": 100 },
+        "inspector2Signature": { "type": "string", "description": "Second inspector signature data URI" },
+        "inspectionDate": { "type": "string", "description": "Inspection date string", "maxLength": 50 },
+        "notes": { "type": "string", "description": "Verification notes", "maxLength": 500 },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" }
+      },
+      "required": ["drugId", "name", "quantity"]
+    },
+    "SystemSetting": {
+      "title": "SystemSetting",
+      "description": "System budget and configuration settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Config document key" },
+        "fiscalYear": { "type": "number", "description": "Current fiscal year" },
+        "budgetTotal": { "type": "number", "description": "Total annual drug budget limit" },
+        "hospitalName": { "type": "string", "description": "Hospital name", "maxLength": 150 },
+        "directorName": { "type": "string", "description": "Director name", "maxLength": 100 },
+        "inspector1DefaultName": { "type": "string", "description": "Default inspector 1 name", "maxLength": 100 },
+        "inspector1DefaultPos": { "type": "string", "description": "Default inspector 1 position", "maxLength": 100 },
+        "inspector2DefaultName": { "type": "string", "description": "Default inspector 2 name", "maxLength": 100 },
+        "inspector2DefaultPos": { "type": "string", "description": "Default inspector 2 position", "maxLength": 100 },
+        "updatedAt": { "type": "string", "description": "Updated timestamp" }
+      },
+      "required": ["fiscalYear", "budgetTotal"]
+    },
+    "PatientPID": {
+      "title": "PatientPID",
+      "description": "Patient clinic profile with prescribed medications and recurring Friday appointment cycle",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique PID or database key" },
+        "pid": { "type": "string", "description": "Patient ID / Hospital Number", "maxLength": 50 },
+        "name": { "type": "string", "description": "Full name of the patient", "maxLength": 150 },
+        "age": { "type": "number", "description": "Patient age in years" },
+        "clinicGroup": { "type": "string", "description": "Disease clinic group e.g. NCD, DM, HT, Asthma", "maxLength": 100 },
+        "appointmentCycle": { "type": "string", "description": "Regular appointment cycle: 'fri_1' (1st Friday) or 'fri_3' (3rd Friday)", "maxLength": 50 },
+        "medications": { "type": "string", "description": "JSON stringified list of prescribed drugs with drugNo, name, unit, qtyPerCycle" },
+        "notes": { "type": "string", "description": "Clinical care notes", "maxLength": 500 },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["pid", "name", "appointmentCycle"]
+    },
+    "ClinicAppointment": {
+      "title": "ClinicAppointment",
+      "description": "Scheduled clinic dispensing session records and pick list status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Appointment session ID" },
+        "date": { "type": "string", "description": "Date of clinic session YYYY-MM-DD", "maxLength": 50 },
+        "cycle": { "type": "string", "description": "fri_1 or fri_3", "maxLength": 50 },
+        "totalPatients": { "type": "number", "description": "Count of patients attending session" },
+        "status": { "type": "string", "description": "planned, prepared, dispensed", "maxLength": 50 },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["date", "cycle"]
+    }
+  },
+  "firestore": {
+    "/drugs/{drugId}": {
+      "schema": "DrugItem",
+      "description": "Collection of drug items in inventory catalog"
+    },
+    "/internal_ledgers/{ledgerId}": {
+      "schema": "InternalLedger",
+      "description": "Collection of monthly ledger documents for internal pharmacy"
+    },
+    "/external_drugs/{externalId}": {
+      "schema": "ExternalDrug",
+      "description": "Collection of requisitioned external pharmacy medicines"
+    },
+    "/system_settings/{settingId}": {
+      "schema": "SystemSetting",
+      "description": "System budget and general hospital configuration"
+    },
+    "/patients/{patientId}": {
+      "schema": "PatientPID",
+      "description": "Patient PID registry with medication regimens and Friday clinic cycles"
+    },
+    "/patient_pids/{patientId}": {
+      "schema": "PatientPID",
+      "description": "Patient PID registry stored in patient_pids collection with medication regimens"
+    },
+    "/clinic_appointments/{appointmentId}": {
+      "schema": "ClinicAppointment",
+      "description": "Clinic dispensing sessions and scheduling records"
+    }
+  }
+}
